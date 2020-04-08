@@ -4,5 +4,5 @@ Rails.application.routes.draw do
   #Set up a route to the "about" page
   get "about", to: "pages#about"
 
-  resources :articles, only: [:show, :index]
+  resources :articles, only: [:show, :index, :new, :create]
 end
