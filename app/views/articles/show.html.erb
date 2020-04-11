@@ -1,5 +1,11 @@
+<% flash.each do |type, msg| %>
+  <div>
+    <%= msg %>
+  </div>
+<% end %>
+
 <h1>
-  Show Article Details
+  Show Article Details, baby.
 </h1>
 
 <h3><b>Title:</b>&nbsp;<font color='red'><%= @article.title %></font></h3>

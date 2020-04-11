@@ -1,21 +1,28 @@
 class ArticlesController < ApplicationController
 
-  def show
-    # 'show' has the function of showing errors for the last time someone attempted to
-    # create a new article. In those cases, an @article instance param has been created 
-    # and its errors.full_messages is displayed in the view.
-    # BUT, the first time through 'show', there is no @article instance param because
-    # it is the first time though 'articles'. So, we create a happy @article here to
-    # make it available in the view so that no error will occur.
+  def show # show a particular article (see show.html.erb)
     @article = Article.find(params[:id])
   end
 
-  def index
+  def index # show all the articles (see index.html.erb)
     @arts = Article.all
   end
 
-  def new
+  def new # (1) show any errors which may have occurred in previous form submission
+          # (2) make the form available again
+    # 'new.html.erb' has the function of showing errors for the previous time someone 
+    # attempted to create a new article in this session (see new.html.erb line 5). When
+    # the user attempted to create an article, an @article instance param was created 
+    # and its errors.full_messages is accessible from the @article instance var.
+    # BUT, the first time through this action in this session, there is no @article 
+    # instance param because there was no prior attempt to create an article IN THIS
+    # SESSION. So, we create a happy @article here to make it available in the view 
+    # and so that no error will occur when we attempt to access it.
     @article = Article.new
+  end
+
+  def edit
+    @article = Article.find(params[:id])
   end
 
   def create
@@ -24,16 +31,28 @@ class ArticlesController < ApplicationController
     #Finally, create a new Article object in the @article instance variable
     @article = Article.new(params.require(:article).permit(:title, :description))
 
-    #save the @article's data to the Articles table. If @article.save worked, then it
-    #returns true. If it failed, false.
+    # save the @article's data to the Articles table. If @article.save worked, then it
+    # returns true and we are redirected to the 'show' action. If it failed, false is
+    # returned and we are redirected to the 'new' action which will display the errors
+    # that occurred and will display the title and description text entries.
     if @article.save
 
       #redirect to the 'show' article action we previously created in this controller, above.
-      redirect_to @article 
+      redirect_to @article # show the data stored in the just-saved article
     else
+      # @article.save failed! So, return to the 'new' action to see the errors and try
+      # again.
+      render 'new' # Again, show the form to create an article
+    end
+  end
 
-      #@article.save failed! So, return to the 'new' action
-      render 'new'
+  def update
+    @article = Article.find(params[:id])
+    if @article.update(params.require(:article).permit(:title, :description))
+      flash[:notice] = "Article was successfully updated."
+      redirect_to @article #as in 'create' above, this sends us to the 'show' action
+    else
+      render 'edit'
     end
   end
 
