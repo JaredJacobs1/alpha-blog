@@ -56,4 +56,16 @@ class ArticlesController < ApplicationController
     end
   end
 
+  def destroy
+    # the route requires this DELETE action to provide an Article id in the URL. It is
+    # accessible, here, in the params array. @article gets the article object.
+    @article = Article.find(params[:id])
+
+    # now, delete the article
+    @article.destroy
+
+    # where do we want to go after the @article is destroyed? The listing page.
+    redirect_to articles_path
+  end
+
 end

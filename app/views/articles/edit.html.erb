@@ -1,4 +1,14 @@
-<style> li { color: red; } </style>
+<style> 
+  p, textarea, input {
+    font-size: 18px; 
+    font-family: arial; 
+  }   
+  label {
+    font-size: 14px; 
+    font-family: arial;
+    font-weight: bold; 
+} 
+</style>
 
 <h1>Edit an Existing Article</h1>
 
@@ -11,6 +21,14 @@
   </ul>
   <br/>
 <% end %>
+
+<!--
+ Note the change, here, between edit.html.erb and show.html.erb. This use of
+ form_with() knows to take the @article.title value and apply it to the :title
+ field, below. And, in the same manner, apply the @article.description to the 
+ :description field. Now the user can arrive at the form with the editable
+ fields filled in.
+ -->
 
 <%= form_with( model: @article, local: true ) do |f| %>
 
@@ -29,3 +47,7 @@
   </p>
 
 <% end %>
+
+<p style="font-color:red; font-family:Trebuchet MS;font-size:16px;">
+  <%= link_to 'Cancel this Edit and List all Articles', articles_path %>
+</p>

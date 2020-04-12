@@ -1,5 +1,7 @@
+<style> table, h1, h3 { font-family: arial; } </style>
+
 <% flash.each do |type, msg| %>
-  <div>
+  <div style={"font-size": 10px;} }>
     <%= msg %>
   </div>
 <% end %>
@@ -10,3 +12,11 @@
 
 <h3><b>Title:</b>&nbsp;<font color='red'><%= @article.title %></font></h3>
 <h3><b>Description:</b>&nbsp;<font color='blue'><%= @article.description %></font></h3>
+
+<STYLE>P,A {text-decoration: none;} </STYLE>
+
+<p style="font-color:red; font-family:Trebuchet MS;font-size:16px;">
+  <%= link_to 'List All Articles', articles_path %> |
+  <%= link_to 'Edit This Article', edit_article_path(@article) %> |
+  <%= link_to 'Delete This Article', article_path(@article), method: :delete, data: { confirm: "Delete this article?" } %>
+</p>
