@@ -1,7 +1,11 @@
 class ArticlesController < ApplicationController
+  before_action :set_article, only: [:show, :edit, :update, :destroy]
 
   def show # show a particular article (see show.html.erb)
-    @article = Article.find(params[:id])
+    # the route requires this show action to provide an Article id in the URL. It is
+    # accessible, here, in the params array. @article gets the article object.
+    # see 'set_article', below, and 'before_action', above.
+
   end
 
   def index # show all the articles (see index.html.erb)
@@ -22,20 +26,23 @@ class ArticlesController < ApplicationController
   end
 
   def edit
-    @article = Article.find(params[:id])
+    # the route requires this edit action to provide an Article id in the URL. It is
+    # accessible, here, in the params array. @article gets the article object.
+    # see 'set_article', below, and 'before_action', above.
   end
 
   def create
     #REQUIRE that a valid article object is present (we rec'd it here from the form)
     #Then, from the required article object, PERMIT access to the title and description.
     #Finally, create a new Article object in the @article instance variable
-    @article = Article.new(params.require(:article).permit(:title, :description))
+    @article = Article.new(params_whitelist)
 
     # save the @article's data to the Articles table. If @article.save worked, then it
     # returns true and we are redirected to the 'show' action. If it failed, false is
     # returned and we are redirected to the 'new' action which will display the errors
     # that occurred and will display the title and description text entries.
     if @article.save
+      flash[:notice] = "Article was successfully created and saved."
 
       #redirect to the 'show' article action we previously created in this controller, above.
       redirect_to @article # show the data stored in the just-saved article
@@ -47,8 +54,10 @@ class ArticlesController < ApplicationController
   end
 
   def update
-    @article = Article.find(params[:id])
-    if @article.update(params.require(:article).permit(:title, :description))
+    # the route requires this update action to provide an Article id in the URL. It is
+    # accessible, here, in the params array. @article gets the article object.
+    # see 'set_article', below, and 'before_action', above.
+   if @article.update(params_whitelist)
       flash[:notice] = "Article was successfully updated."
       redirect_to @article #as in 'create' above, this sends us to the 'show' action
     else
@@ -59,13 +68,23 @@ class ArticlesController < ApplicationController
   def destroy
     # the route requires this DELETE action to provide an Article id in the URL. It is
     # accessible, here, in the params array. @article gets the article object.
-    @article = Article.find(params[:id])
+    # see 'set_article', below, and 'before_action', above.
 
     # now, delete the article
     @article.destroy
 
     # where do we want to go after the @article is destroyed? The listing page.
     redirect_to articles_path
+  end
+
+  private
+
+  def set_article
+    @article = Article.find(params[:id])
+  end
+
+  def params_whitelist
+    params.require(:article).permit(:title, :description)
   end
 
 end
